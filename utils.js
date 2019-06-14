@@ -1,53 +1,84 @@
 var utils = {}
 
-utils.regions = [
-	'Kanto',
-	'Johto'];
-
-utils.cities = [
-	'Celadon City',
-	'Azalea Town',
-	'Cerulean City',
-	'Blackthorn City',
-	'Cinnabar Island',
-	'Cherrygrove City',
-	'Fuchsia City',
-	'Cianwood City',
-	'Lavender Town',
-	'Ecruteak City',
-	'Pallet Town',
-	'Goldenrod City',
-	'Pewter City',
-	'Mahogany Town',
-	'Saffron City',
-	'New Bark Town',
-	'Vermilion City',
-	'Olivine City',
-	'Viridian City',
-	'Violet City'];
-
-utils.makeTrainercard = function makeTrainercard(screen_name) {
+utils.makeScoreboard = function makeScoreboard(screen_name) {
 
     var hash = utils.sha256(screen_name);
+    let spells = utils.makeSpells(hash);
 
-    var trainercard = {
+    var scoreboard = {
         name:       screen_name,
-        region:     utils.regions[  (parseInt('0x' + hash.substring(0, 4)) % 2)],
-        hometown:   utils.cities[   (parseInt('0x' + hash.substring(0, 4)) % 20)],
-        money:                      (parseInt('0x' + hash.substring(5, 9))),
-        pokedex:                    (parseInt('0x' + hash.substring(10, 14)) % 252),
-        badges:                     (parseInt('0x' + hash.substring(15, 19)) % 9),
-        trainer:                    (parseInt('0x' + hash.substring(20, 24)) % 107),
-        pokemon1:                   (parseInt('0x' + hash.substring(25, 29)) % 252),
-        pokemon2:                   (parseInt('0x' + hash.substring(30, 34)) % 252),
-        pokemon3:                   (parseInt('0x' + hash.substring(35, 39)) % 252),
-        pokemon4:                   (parseInt('0x' + hash.substring(40, 44)) % 252),
-        pokemon5:                   (parseInt('0x' + hash.substring(45, 49)) % 252),
-        pokemon6:                   (parseInt('0x' + hash.substring(50, 54)) % 252),
-        id:                         (parseInt('0x' + hash.substring(55, 59))) 
+        result:     (parseInt('0x' + hash.substring(0, 1)) % 2),
+        champion:   (parseInt('0x' + hash.substring(2, 6)) % 145),
+        lvl:        (parseInt('0x' + hash.substring(7, 9)) % 19),
+        spell1:     spells.spell1,
+        spell2:     spells.spell2,
+        boots:      (parseInt('0x' + hash.substring(16, 18)) % 10),
+        item2:      (parseInt('0x' + hash.substring(19, 23)) % 159),
+        item3:      (parseInt('0x' + hash.substring(24, 28)) % 159),
+        item4:      (parseInt('0x' + hash.substring(29, 33)) % 159),
+        item5:      (parseInt('0x' + hash.substring(34, 38)) % 159),
+        item6:      (parseInt('0x' + hash.substring(39, 43)) % 159),
+        trinket:    (parseInt('0x' + hash.substring(44, 46)) % 4),
+        kda:        utils.makeKDA(hash),
+        cs:         (parseInt('0x' + hash.substring(53, 56)) % 501),
+        gold:       utils.numberFormat((parseInt('0x' + hash.substring(57, 64)) % 25001)),
+        time:       utils.makeGameTime(hash),
+        date:       utils.makeDate()
     };
 
-    return trainercard;
+    return scoreboard;
+}
+
+utils.makeSpells = function makeSpells(hash) {
+    let spell1 = (parseInt('0x' + hash.substring(10, 12)) % 12);
+
+    let spell2 = (parseInt('0x' + hash.substring(13, 15)) % 12);
+
+    while(spell1 == spell2) {
+        hash = utils.sha256(hash);
+        spell2 = (parseInt('0x' + hash.substring(13, 15)) % 12);
+    }
+
+    return { spell1: spell1, spell2: spell2 };
+}
+
+utils.makeKDA = function makeKDA(hash) {
+    let kills   = (parseInt('0x' + hash.substring(46, 47)));
+    let deaths  = (parseInt('0x' + hash.substring(48, 49)));
+    let assists = (parseInt('0x' + hash.substring(50, 52)) % 33);
+
+    return (kills + '/' + deaths + '/' + assists);
+}
+
+utils.makeGameTime = function makeGameTime(hash) {
+    let minutes = (parseInt('0x' + hash.substring(0, 31)) % 60);
+    let seconds = (parseInt('0x' + hash.substring(32, 64)) % 60);
+
+    if(seconds < 10) {
+        seconds = '0' + seconds;
+    }
+    
+    return (minutes + ':' + seconds);
+}
+
+utils.makeDate = function makeDate() {
+    let today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+
+    let yyyy = today.getFullYear();
+    
+    if(dd < 10) {
+        dd = '0' + dd;
+    }
+    if(mm < 10) {
+    mm = '0' + mm;
+    }
+    return (dd + '/' + mm + '/' + yyyy);
+}
+
+utils.numberFormat = function numberFormat(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 utils.makeTweet = function makeTweet(tweet, imagem) {
