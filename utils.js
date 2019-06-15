@@ -7,36 +7,46 @@ utils.makeScoreboard = function makeScoreboard(screen_name) {
 
     var scoreboard = {
         name:       screen_name,
-        result:     (parseInt('0x' + hash.substring(0, 1)) % 2),
-        champion:   (parseInt('0x' + hash.substring(2, 6)) % 145),
-        lvl:        (parseInt('0x' + hash.substring(7, 9)) % 19),
+        result:     utils.makeResult(hash),
+        champion:   (parseInt('0x' + hash.substring(2, 6)) % 144),
+        lvl:        (parseInt('0x' + hash.substring(7, 9)) % 18) + 1,
         spell1:     spells.spell1,
         spell2:     spells.spell2,
-        boots:      (parseInt('0x' + hash.substring(16, 18)) % 10),
-        item2:      (parseInt('0x' + hash.substring(19, 23)) % 159),
-        item3:      (parseInt('0x' + hash.substring(24, 28)) % 159),
-        item4:      (parseInt('0x' + hash.substring(29, 33)) % 159),
-        item5:      (parseInt('0x' + hash.substring(34, 38)) % 159),
-        item6:      (parseInt('0x' + hash.substring(39, 43)) % 159),
-        trinket:    (parseInt('0x' + hash.substring(44, 46)) % 4),
+        boots:      (parseInt('0x' + hash.substring(16, 18)) % 9),
+        item2:      (parseInt('0x' + hash.substring(19, 23)) % 158),
+        item3:      (parseInt('0x' + hash.substring(24, 28)) % 158),
+        item4:      (parseInt('0x' + hash.substring(29, 33)) % 158),
+        item5:      (parseInt('0x' + hash.substring(34, 38)) % 158),
+        item6:      (parseInt('0x' + hash.substring(39, 43)) % 158),
+        trinket:    (parseInt('0x' + hash.substring(44, 46)) % 3),
         kda:        utils.makeKDA(hash),
-        cs:         (parseInt('0x' + hash.substring(53, 56)) % 501),
-        gold:       utils.numberFormat((parseInt('0x' + hash.substring(57, 64)) % 25001)),
-        time:       utils.makeGameTime(hash),
+        cs:         utils.makeCS(hash),
+        gold:       utils.makeGold(hash),
+        gametime:   utils.makeGameTime(hash),
         date:       utils.makeDate()
     };
 
     return scoreboard;
 }
 
-utils.makeSpells = function makeSpells(hash) {
-    let spell1 = (parseInt('0x' + hash.substring(10, 12)) % 12);
+utils.makeResult = function makeResult(hash) {
+    let result = (parseInt('0x' + hash.substring(0, 1)) % 2);
 
-    let spell2 = (parseInt('0x' + hash.substring(13, 15)) % 12);
+    if(result == 0) {
+        return 'red';
+    } else {
+        return 'blue';
+    }
+}
+
+utils.makeSpells = function makeSpells(hash) {
+    let spell1 = (parseInt('0x' + hash.substring(10, 12)) % 11);
+
+    let spell2 = (parseInt('0x' + hash.substring(13, 15)) % 11);
 
     while(spell1 == spell2) {
         hash = utils.sha256(hash);
-        spell2 = (parseInt('0x' + hash.substring(13, 15)) % 12);
+        spell2 = (parseInt('0x' + hash.substring(13, 15)) % 11);
     }
 
     return { spell1: spell1, spell2: spell2 };
@@ -45,9 +55,42 @@ utils.makeSpells = function makeSpells(hash) {
 utils.makeKDA = function makeKDA(hash) {
     let kills   = (parseInt('0x' + hash.substring(46, 47)));
     let deaths  = (parseInt('0x' + hash.substring(48, 49)));
-    let assists = (parseInt('0x' + hash.substring(50, 52)) % 33);
+    let assists = (parseInt('0x' + hash.substring(50, 52)) % 32);
 
-    return (kills + '/' + deaths + '/' + assists);
+    return (kills + ' / ' + deaths + ' / ' + assists);
+}
+
+utils.makeCS = function makeCS(hash) {
+    let cs = (parseInt('0x' + hash.substring(53, 56)) % 513);
+
+    if(cs < 10) {
+        return ('      ' + cs);
+    }
+    if(cs < 100) {
+        return ('   ' + cs);
+    } else {
+        return (cs);
+    }
+}
+
+utils.makeGold = function makeGold(hash) {
+    let gold = (parseInt('0x' + hash.substring(57, 64)) % 25001);
+    let goldF = utils.numberFormat((parseInt('0x' + hash.substring(57, 64)) % 25001));
+
+    if(gold < 10) {
+        return ('             ' + goldF);
+    }
+    if(gold < 100) {
+        return ('          ' + goldF);
+    }
+    if(gold < 1000) {
+        return ('       ' + goldF);
+    }
+    if(gold < 10000) {
+        return ('   ' + goldF);
+    } else {
+        return (goldF);
+    }
 }
 
 utils.makeGameTime = function makeGameTime(hash) {
