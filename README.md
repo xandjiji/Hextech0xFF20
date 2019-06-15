@@ -1,5 +1,7 @@
 # Hextech0xFF20
 
+A twitter bot that automatically generates and tweets random LoL post-game stats.
+
 <p align="center">
   <img src="https://i.imgur.com/oITRb7k.png">
 </p>
