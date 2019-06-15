@@ -1,13 +1,13 @@
 # Hextech0xFF20
 
 <p align="center">
-  <img src="https://i.imgur.com/hqBMUAG.png">
+  <img src="https://i.imgur.com/oITRb7k.png">
 </p>
 
 Now with beautiful logging!
 
 <p align="center">
-  <img src="https://i.imgur.com/oITRb7k.png">
+  <img src="https://i.imgur.com/pDtW5d4.png">
 </p>
 
 ### Installation
