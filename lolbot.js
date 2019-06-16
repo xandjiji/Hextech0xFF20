@@ -200,7 +200,7 @@ function loadAssets() {
     jimps.push(Jimp.read('assets/template.png'));
 }
 
-// retuita um tuite que falhou que falharam (NAO TESTADO)
+// rewteets a tweet that failed previously
 function reTweet() {
 
 	if(failedTweets.queue.length != 0) {
