@@ -121,7 +121,7 @@ client.stream('statuses/filter', {track: '@Hextech0xFF20'},  function(stream) {
                                 data[0].write('saved/' + scoreboard.name + '.png', function() {
                         
                                     // reseting data[0]
-                                    data[0].composite(data[326], 0, 0);
+                                    data[0].composite(data[utils.counters.total], 0, 0);
             
                                     // uploading score image
                                     var imagem = fs.readFileSync('saved/' + scoreboard.name + '.png');
