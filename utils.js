@@ -1,5 +1,23 @@
 var utils = {}
 
+let templates   = 1;
+let champions   = 144;
+let items       = 155;
+let boots       = 9;
+let trinkets    = 3;
+let spells      = 11;
+let total       = templates + champions + items + boots + trinkets + spells;
+
+utils.counters = {
+    templates:  templates,
+    champions:  champions,
+    items:      items,
+    boots:      boots,
+    trinkets:   trinkets,
+    spells:     spells,
+    total:      total
+}
+
 utils.makeScoreboard = function makeScoreboard(screen_name) {
 
     var hash = utils.sha256(screen_name);
@@ -8,17 +26,17 @@ utils.makeScoreboard = function makeScoreboard(screen_name) {
     var scoreboard = {
         name:       screen_name,
         result:     utils.makeResult(hash),
-        champion:   (parseInt('0x' + hash.substring(2, 6)) % 144),
+        champion:   (parseInt('0x' + hash.substring(2, 6)) % utils.counters.champions),
         lvl:        (parseInt('0x' + hash.substring(7, 9)) % 18) + 1,
         spell1:     spells.spell1,
         spell2:     spells.spell2,
-        boots:      (parseInt('0x' + hash.substring(16, 18)) % 9),
-        item2:      (parseInt('0x' + hash.substring(19, 23)) % 158),
-        item3:      (parseInt('0x' + hash.substring(24, 28)) % 158),
-        item4:      (parseInt('0x' + hash.substring(29, 33)) % 158),
-        item5:      (parseInt('0x' + hash.substring(34, 38)) % 158),
-        item6:      (parseInt('0x' + hash.substring(39, 43)) % 158),
-        trinket:    (parseInt('0x' + hash.substring(44, 46)) % 3),
+        boots:      (parseInt('0x' + hash.substring(16, 18)) % utils.counters.boots),
+        item2:      (parseInt('0x' + hash.substring(19, 23)) % utils.counters.items),
+        item3:      (parseInt('0x' + hash.substring(24, 28)) % utils.counters.items),
+        item4:      (parseInt('0x' + hash.substring(29, 33)) % utils.counters.items),
+        item5:      (parseInt('0x' + hash.substring(34, 38)) % utils.counters.items),
+        item6:      (parseInt('0x' + hash.substring(39, 43)) % utils.counters.items),
+        trinket:    (parseInt('0x' + hash.substring(44, 46)) % utils.counters.trinkets),
         kda:        utils.makeKDA(hash),
         cs:         utils.makeCS(hash),
         gold:       utils.makeGold(hash),
@@ -40,13 +58,13 @@ utils.makeResult = function makeResult(hash) {
 }
 
 utils.makeSpells = function makeSpells(hash) {
-    let spell1 = (parseInt('0x' + hash.substring(10, 12)) % 11);
+    let spell1 = (parseInt('0x' + hash.substring(10, 12)) % utils.counters.spells);
 
-    let spell2 = (parseInt('0x' + hash.substring(13, 15)) % 11);
+    let spell2 = (parseInt('0x' + hash.substring(13, 15)) % utils.counters.spells);
 
     while(spell1 == spell2) {
         hash = utils.sha256(hash);
-        spell2 = (parseInt('0x' + hash.substring(13, 15)) % 11);
+        spell2 = (parseInt('0x' + hash.substring(13, 15)) % utils.counters.spells);
     }
 
     return { spell1: spell1, spell2: spell2 };

@@ -55,35 +55,42 @@ client.stream('statuses/filter', {track: '@Hextech0xFF20'},  function(stream) {
                 /*
                     template:   0
                     champions:  1-144
-                    items:      145-302
-                    boots:      303-311
-                    trinkets:   312-314
-                    spells:     315-325
-                    template:   326
+                    items:      145-299
+                    boots:      300-308
+                    trinkets:   309-311
+                    spells:     312-322
+                    template:   323
                 */
-            
+
+                let templateIndex = 0;
+                let championsIndex  = (templateIndex    + utils.counters.templates);
+                let itemsIndex      = (championsIndex   + utils.counters.champions);
+                let bootsIndex      = (itemsIndex       + utils.counters.items);
+                let trinketsIndex   = (bootsIndex       + utils.counters.boots);
+                let spellsIndex     = (trinketsIndex    + utils.counters.trinkets);
+
                 // drawing champion
-                data[0].composite(data[1+scoreboard.champion], 21, 18);
+                data[0].composite(data[championsIndex+scoreboard.champion], 21, 18);
             
                 // drawing boots
-                data[0].composite(data[303+scoreboard.boots],   320 + (42 * 0), 24);
+                data[0].composite(data[bootsIndex+scoreboard.boots],   320 + (42 * 0), 24);
                 
                 // drawing items
-                data[0].composite(data[145+scoreboard.item2],   320 + (42 * 1), 24);
-                data[0].composite(data[145+scoreboard.item3],   320 + (42 * 2), 24);
-                data[0].composite(data[145+scoreboard.item4],   320 + (42 * 3), 24);
-                data[0].composite(data[145+scoreboard.item5],   320 + (42 * 4), 24);
-                data[0].composite(data[145+scoreboard.item6],   320 + (42 * 5), 24);
+                data[0].composite(data[itemsIndex+scoreboard.item2],   320 + (42 * 1), 24);
+                data[0].composite(data[itemsIndex+scoreboard.item3],   320 + (42 * 2), 24);
+                data[0].composite(data[itemsIndex+scoreboard.item4],   320 + (42 * 3), 24);
+                data[0].composite(data[itemsIndex+scoreboard.item5],   320 + (42 * 4), 24);
+                data[0].composite(data[itemsIndex+scoreboard.item6],   320 + (42 * 5), 24);
             
                 // drawing trinket
-                data[0].composite(data[312+scoreboard.trinket], 320 + (42 * 6), 24);
+                data[0].composite(data[trinketsIndex+scoreboard.trinket], 320 + (42 * 6), 24);
             
                 // drawing spells
-                data[0].composite(data[315+scoreboard.spell1], 124, 71);
-                data[0].composite(data[315+scoreboard.spell2], 149, 71);
+                data[0].composite(data[spellsIndex+scoreboard.spell1], 124, 71);
+                data[0].composite(data[spellsIndex+scoreboard.spell2], 149, 71);
             
                 // drawing template again
-                data[0].composite(data[326], 0, 0);
+                data[0].composite(data[utils.counters.total], 0, 0);
             
             
                 // writing
@@ -172,28 +179,28 @@ function loadAssets() {
     jimps.push(Jimp.read('assets/template.png'));
 
     // loading champions
-    for(let i = 1; i < 145; i++) {
-        jimps.push(Jimp.read('assets/champions/' + i + '.png'));
+    for(let i = 0; i < utils.counters.champions; i++) {
+        jimps.push(Jimp.read('assets/champions/' + (i+1) + '.png'));
     }
 
     // loading items
-    for(var i = 1; i < 159; i++) {
-        jimps.push(Jimp.read('assets/items/' + i + '.png'));
+    for(var i = 0; i < utils.counters.items; i++) {
+        jimps.push(Jimp.read('assets/items/' + (i+1) + '.png'));
     }
 
     // loading boots
-    for(var i = 1; i < 10; i++) {
-        jimps.push(Jimp.read('assets/items/boots/' + i + '.png'));
+    for(var i = 0; i < utils.counters.boots; i++) {
+        jimps.push(Jimp.read('assets/items/boots/' + (i+1) + '.png'));
     }
 
     // loading trinkets
-    for(var i = 1; i < 4; i++) {
-        jimps.push(Jimp.read('assets/items/trinkets/' + i + '.png'));
+    for(var i = 0; i < utils.counters.trinkets; i++) {
+        jimps.push(Jimp.read('assets/items/trinkets/' + (i+1) + '.png'));
     }
 
     // loading spells
-    for(var i = 1; i < 12; i++) {
-        jimps.push(Jimp.read('assets/spells/' + i + '.png'));
+    for(var i = 0; i < utils.counters.spells; i++) {
+        jimps.push(Jimp.read('assets/spells/' + (i+1) + '.png'));
     }
 
     // saving the template
