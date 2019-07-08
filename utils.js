@@ -145,7 +145,7 @@ utils.numberFormat = function numberFormat(x) {
 utils.makeTweet = function makeTweet(tweet, imagem) {
 
     var composedTweet = {
-        status: '@' + tweet.user.screen_name + ' here you go, ' + tweet.user.name + '!',
+        status: '@' + tweet.user.screen_name,
         in_reply_to_status_id: tweet.id_str,
         media_ids: imagem.media_id_string
     };
